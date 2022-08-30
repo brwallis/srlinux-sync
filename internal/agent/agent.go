@@ -262,8 +262,8 @@ func HandleConfigEvent(op protos.SdkMgrOperation, key *protos.ConfigKey, data *s
 		return
 	}
 
-	for _, item := range a.CfgTranxMap[".kbutler.config-node"] {
-		log.Infof("%s", item)
+	for _, item := range a.CfgTranxMap[".dssync.override"] {
+		log.Infof("%s: got new override", item)
 		// HandleKButlerConfigEvent(item.Op, item.Key, item.Data)
 	}
 

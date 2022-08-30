@@ -1,13 +1,13 @@
-fumble:
-   path: /opt/srlinux/usr/bin/
-   launch-command: ./fumble
-   search-command: ./fumble
+dssync:
+   path: /opt/srlinux/dssync/bin/
+   launch-command: ./dssync
+   search-command: ./dssync
    wait-for-config: Yes
    start-order: 254
    failure-threshold: 100
    failure-action: "wait=60"
    yang-modules:
        names: 
-           - "fumble"
+           - "dssync"
        source-directories:
-           - "/opt/fumble/yang/"
+           - "/opt/srlinux/dssync/yang/"

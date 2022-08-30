@@ -5,6 +5,7 @@ set -e
 
 # Set known directories
 SRL_ETC_DIR="/host/etc/opt/srlinux"
+DSSYNC_BASE_DIR="/host/"
 DSSYNC_BIN_FILE="/dssync/bin/dssync"
 DSSYNC_YANG="/dssync/yang/dssync.yang"
 DSSYNC_CONFIG="/dssync/dssync_config.yml"

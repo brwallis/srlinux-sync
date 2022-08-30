@@ -56,7 +56,7 @@ $(BUILDDIR): | $(BASE) ; $(info Creating build directory...)
 	@cd $(BASE) && mkdir -p $@
 
 .PHONY: build
-build: | $(BUILDDIR)/$(BINARY_NAME) ; $(info Building $(BINARY_NAME)...) @ ## Build SR Linux Kubernetes Butler
+build: | $(BUILDDIR)/$(BINARY_NAME) ; $(info Building $(BINARY_NAME)...) @ ## Build SR Linux DS sync agent
 	$(info Done!)
 
 $(BUILDDIR)/$(BINARY_NAME): $(GOFILES) | $(BUILDDIR)
@@ -88,6 +88,15 @@ fmt: ; $(info  Running gofmt...) @ ## Run gofmt on all source files
 image: | $(BASE) ; $(info Building SR Linux DS sync Docker image...) @ ## Build SR Linux dssync docker image
 	@docker build --build-arg REPO_USER=$(REPO_USER) --build-arg REPO_PASSWORD=$(REPO_PASSWORD) -t $(TAG) -f $(DOCKERFILE) $(CURDIR) $(DOCKERARGS)
 # Misc
+
+# RPM packages
+# To pass proxy for Docker invoke it as 'make image HTTP_POXY=http://192.168.0.1:8080'
+.PHONY: rpm
+rpm: | $(BASE) ; $(info Building SR Linux DS sync RPM...) @ ## Build SR Linux dssync RPM
+	@make clean && make build && docker run --rm -v $(CURDIR):/tmp -w /tmp goreleaser/nfpm package \
+    --config /tmp/nfpm.yml \
+    --target /tmp \
+    --packager rpm
 
 .PHONY: clean
 clean: | $(BASE) ; $(info  Cleaning...) @ ## Cleanup everything

@@ -1,0 +1,34 @@
+name: "dssync"
+arch: "amd64"
+platform: "linux"
+version: "v1"
+section: "default"
+priority: "extra"
+maintainer: "Bruce Wallis <bruce.wallis@nokia.com>"
+description: |
+  DS sync is a simple path synchronizer used with SR Linux
+vendor: "Nokia"
+license: "Apache"
+replaces:
+- dssync
+provides:
+- dssync
+contents:
+  - src: build/dssync
+    dst: /opt/srlinux/dssync/bin/dssync
+
+  - src: appmgr/dssync.yang
+    dst: /opt/srlinux/dssync/yang/dssync.yang
+
+  - src: appmgr/dssync_config.yml
+    dst: /etc/opt/srlinux/appmgr/dssync_config.yml
+#
+#files:
+#    ./build/dssync: "/opt/srlinux/dssync/bin/dssync"
+#    ./appmgr/dssync.yang: "/opt/srlinux/dssync/yang/dssync.yang"
+#    ./appmgr/dssync_config.yml: "/etc/opt/srlinux/appmgr/dssync_config.yml"
+#config_files:
+#    overrides:
+#        rpm:
+#            scripts:
+
