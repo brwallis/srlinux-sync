@@ -2,8 +2,8 @@ FROM golang:alpine as builder
 
 LABEL Author "Bruce Wallis <bwallis@nokia.com>"
 
-ARG WORK_DIR="/usr/src/kbutler"
-ARG BINARY_NAME="kbutler"
+ARG WORK_DIR="/usr/src/dssync"
+ARG BINARY_NAME="dssync"
 ARG REPO_USER
 ENV REPO_USER=$REPO_USER
 ARG REPO_PASSWORD
@@ -23,16 +23,16 @@ RUN make clean && \
 #RUN git config --global url."https://${REPO_USER}:${REPO_PASSWORD}@github.com".insteadOf "https://github.com"
 
 FROM alpine:3
-ARG WORK_DIR="/usr/src/kbutler"
-ARG BINARY_NAME="kbutler"
+ARG WORK_DIR="/usr/src/dssync"
+ARG BINARY_NAME="dssync"
 RUN mkdir -p /${BINARY_NAME}/bin
 RUN mkdir -p /${BINARY_NAME}/yang
 COPY --from=builder ${WORK_DIR}/build/$BINARY_NAME /${BINARY_NAME}/bin/
-COPY --from=builder ${WORK_DIR}/appmgr/kbutler.yang /${BINARY_NAME}/yang
-COPY --from=builder ${WORK_DIR}/appmgr/kbutler_config.yml /${BINARY_NAME}/
+COPY --from=builder ${WORK_DIR}/appmgr/dssync.yang /${BINARY_NAME}/yang
+COPY --from=builder ${WORK_DIR}/appmgr/dssync_config.yml /${BINARY_NAME}/
 WORKDIR /
 
-LABEL io.k8s.display-name="Nokia SR Linux KButler"
+LABEL io.k8s.display-name="Nokia SR Linux dssync"
 
 COPY ./images/entrypoint.sh /entrypoint.sh
 

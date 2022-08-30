@@ -1,24 +1,23 @@
-# nfpm example config file
-name: "fumble"
+name: "dssync"
 arch: "amd64"
 platform: "linux"
 version: "v1"
 section: "default"
 priority: "extra"
 replaces:
-- fumble
+- dssync
 provides:
-- fumble
+- dssync
 maintainer: "Bruce Wallis <bruce.wallis@nokia.com>"
 description: |
-  Fumble is a simple system-wide packet drop detector.
+  DS sync is a simple path synchronizer used with SR Linux.
 vendor: "Nokia"
-license: "BSD 2"
+license: "Apache"
 bindir: "/opt/srlinux/usr/bin/"
 files:
-  ./go/bin/fumble: "/opt/srlinux/usr/bin/fumble"
-  ./go/cmd/fumble/fumble.yang: "/opt/fumble/yang/fumble.yang"
-  ./go/cmd/fumble/fumble_config.yml: "/etc/opt/srlinux/appmgr/fumble_config.yml"
+  ./cmd/ndk/bin/fumble: "/opt/srlinux/usr/bin/fumble"
+  ./ndk/cmd/fumble/fumble.yang: "/opt/fumble/yang/fumble.yang"
+  ./ndk/cmd/fumble/fumble_config.yml: "/etc/opt/srlinux/appmgr/fumble_config.yml"
 config_files:
 overrides:
   rpm:

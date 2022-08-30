@@ -17,6 +17,10 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
+type PathKey struct {
+	Path string
+}
+
 // CfgTranxEntry contains an NDK mgr operation
 type CfgTranxEntry struct {
 	Op   protos.SdkMgrOperation

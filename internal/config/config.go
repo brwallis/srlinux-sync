@@ -10,6 +10,10 @@ type OperState struct {
 	Value string `json:"value"`
 }
 
+type Value struct {
+	Value string `json:"value"`
+}
+
 type Address struct {
 	Value string `json:"value"`
 }
@@ -38,6 +42,10 @@ type Endpoint struct {
 	// NextHops struct {
 	// 	value []string `json:"next_hops"`
 	// }
+}
+
+type Path struct {
+	Value Value `json:"value"`
 }
 
 type Service struct {
