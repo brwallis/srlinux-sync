@@ -1,0 +1,38 @@
+module dssync {
+
+    yang-version 1.1;
+
+    // namespace
+    namespace "urn:srl_ndk_apps/dssync";
+
+    prefix "srl_ndk_apps-dssync";
+
+    revision "2022-08-30" {
+        description "Initial revision";
+    }
+
+    grouping dssync-top {
+        description "Top level grouping for ds-sync configuration and state";
+
+        container dssync {
+            presence "Enable DS synchronization";
+            description "Top level enclosing container for ds-sync configuration and state";
+
+            list path {
+                description "List of paths with ds-sync overrides";
+                key path;
+                leaf path {
+                    type string;
+                    description "A path with an active override";
+                }
+                leaf value {
+                    type string;
+                    mandatory true;
+                    description "The desired value of the path";
+                }
+            }
+        }
+    }
+
+    uses dssync-top;
+}

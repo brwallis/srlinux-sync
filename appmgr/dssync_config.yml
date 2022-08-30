@@ -1,0 +1,13 @@
+fumble:
+   path: /opt/srlinux/usr/bin/
+   launch-command: ./fumble
+   search-command: ./fumble
+   wait-for-config: Yes
+   start-order: 254
+   failure-threshold: 100
+   failure-action: "wait=60"
+   yang-modules:
+       names: 
+           - "fumble"
+       source-directories:
+           - "/opt/fumble/yang/"
