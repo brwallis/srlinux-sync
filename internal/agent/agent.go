@@ -85,7 +85,7 @@ func (a *Agent) UpdateTelemetry(jsPath *string, jsData *string) *protos.Telemetr
 }
 
 func (a *Agent) UpdatePathTelemetry(pathKey PathKey) {
-	jsPath := fmt.Sprintf("%s.service{.service_name==\"%s\"&&.namespace==\"%s\"}", a.YangRoot, pathKey.Name, pathKey.Namespace)
+	jsPath := fmt.Sprintf("%s.override{.path==\"%s\"}", a.YangRoot, pathKey.Path)
 	jsData, err := json.Marshal(a.YangPath[pathKey])
 	if err != nil {
 		log.Fatalf("Can not marshal config data: error %s", err)
