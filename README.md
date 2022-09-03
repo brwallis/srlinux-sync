@@ -1,5 +1,5 @@
 # srlinux-sync
-This repository contains the needed components to synchronizes state paths between two or more SR Linux devices. 
+This repository contains the needed components to synchronize state paths between two or more SR Linux devices. 
 
 This can be used to synchronize certain state paths between an instance of SR Linux running in production, and a representative instance inside the Fabric Services System Digital Sandbox, or any other simulation tool for the purposes of CI, as one example use case.
 
@@ -51,37 +51,43 @@ system {
 The NDK agent can be built from source using the provided `Makefile`. Options available are:
 
 * `make help`
-Provides help around how to use the `Makefile`
+provides help around how to use the `Makefile`
 
 * `make fmt`
-Runs `gofmt` on all Go source files
+runs `gofmt` on all Go source files
 
 * `make lint`
-Runs `golint` on all Go source files
+runs `golint` on all Go source files
 
 * `make build`
-This builds the NDK agent using a local Go installation
+builds the NDK agent using a local Go installation
 
 * `make rpm`
-This builds the agent, then packages it and other required artifacts into an RPM using the `goreleaser/nfpm` container
+builds the agent, then packages it and other required artifacts into an RPM using the `goreleaser/nfpm` container
 
 * `make image`
-This uses a docker container to build the agent, and packages binaries and other artifacts inside the container with an entrypoint that copies these to the host
+uses a docker container to build the agent, and packages binaries and other artifacts inside the container with an entrypoint that copies these to the host
 
 * `make clean`
-This cleans the workspace, removing artifacts from previous builds
+cleans the workspace, removing artifacts from previous builds
 
 # Installation
 ## via rpm
 All steps are executed as the admin user, starting from a bash shell.
 
 Install the RPM on both the the Digital Sandbox and production target nodes
-`sudo rpm -ivh dssync-1.0.0.x86_64.rpm`
+```
+sudo rpm -ivh dssync-1.0.0.x86_64.rpm
+```
 ### On the Digital Sandbox node
 Reload app_mgr to pick up the new dssync agent YANG
-`sr_cli tools system app-management application app_mgr reload`
+```
+sr_cli tools system app-management application app_mgr reload
+```
 Enable the DS synchronization event handler
-`sr_cli -ec system event-handler instance ds-sync admin-state enable upython-script ds-sync.py paths [ \"dssync override \* value\" ]`
+```
+sr_cli -ec system event-handler instance ds-sync admin-state enable upython-script ds-sync.py paths [ \"dssync override \* value\" ]
+```
 This results in the following configuration:
 ```
 system {
@@ -99,7 +105,9 @@ system {
 
 ### On the production node
 Enable the DS trigger event handler
-`sr_cli -ec system event-handler instance ds-trigger admin-state enable upython-script ds-trigger.py paths [ \"interface ethernet-1/\{1,2\} oper-state\" ] options object target value 172.20.20.2:57400`
+```
+sr_cli -ec system event-handler instance ds-trigger admin-state enable upython-script ds-trigger.py paths [ \"interface ethernet-1/\{1,2\} oper-state\" ] options object target value 172.20.20.2:57400
+```
 This results in the following configuration:
 ```
 system {
