@@ -22,6 +22,15 @@ contents:
 
   - src: appmgr/dssync_config.yml
     dst: /etc/opt/srlinux/appmgr/dssync_config.yml
+
+  - src: eventmgr/ds-sync.py
+    dst: /etc/opt/srlinux/eventmgr/ds-sync.py
+
+  - src: eventmgr/ds-trigger.py
+    dst: /etc/opt/srlinux/eventmgr/ds-trigger.py
+
+  - src: eventmgr/gnmic
+    dst: /opt/srlinux/dssync/bin/gnmic
 #
 #files:
 #    ./build/dssync: "/opt/srlinux/dssync/bin/dssync"

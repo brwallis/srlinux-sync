@@ -17,7 +17,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-type PathKey struct {
+type OverrideKey struct {
 	Path string
 }
 
@@ -41,9 +41,9 @@ type Agent struct {
 
 	CfgTranxMap map[string][]CfgTranxEntry
 
-	Yang     config.AgentYang
-	YangPath map[PathKey]*config.Path
-	YangRoot string
+	Yang         config.AgentYang
+	YangOverride map[OverrideKey]*config.Path
+	YangRoot     string
 }
 
 func (a *Agent) GetName() string {
@@ -84,9 +84,9 @@ func (a *Agent) UpdateTelemetry(jsPath *string, jsData *string) *protos.Telemetr
 	return result
 }
 
-func (a *Agent) UpdatePathTelemetry(pathKey PathKey) {
-	jsPath := fmt.Sprintf("%s.override{.path==\"%s\"}", a.YangRoot, pathKey.Path)
-	jsData, err := json.Marshal(a.YangPath[pathKey])
+func (a *Agent) UpdateOverrideTelemetry(overrideKey OverrideKey) {
+	jsPath := fmt.Sprintf("%s.override{.path==\"%s\"}", a.YangRoot, overrideKey.Path)
+	jsData, err := json.Marshal(a.YangOverride[overrideKey])
 	if err != nil {
 		log.Fatalf("Can not marshal config data: error %s", err)
 	}
@@ -160,7 +160,7 @@ func (a *Agent) Init(name string, ndkAddress string, yangRoot string) {
 	a.YangRoot = yangRoot
 
 	a.CfgTranxMap = make(map[string][]CfgTranxEntry)
-	a.YangPath = make(map[PathKey]*config.Path)
+	a.YangOverride = make(map[OverrideKey]*config.Path)
 
 	subscribeStreams(a)
 }
@@ -226,6 +226,38 @@ func (a *Agent) ReceiveNotifications() {
 	<-waitc
 }
 
+// HandleOverrideConfigEvent handles configuration events for the root node
+func HandleOverrideConfigEvent(op protos.SdkMgrOperation, key *protos.ConfigKey, data *string, a *Agent) {
+	log.Infof("\n jspath %s keys %v", key.GetJsPath(), key.GetKeys())
+	var overrideKey OverrideKey
+	overrideKey.Path = key.GetKeys()[0]
+	jsPath := fmt.Sprintf("%s.override{.path==\"%s\"}", a.YangRoot, overrideKey.Path)
+
+	if data != nil {
+		log.Infof("\n data %v", *data)
+	}
+
+	if data == nil {
+		log.Infof("\nNo data found")
+		if op == protos.SdkMgrOperation_Delete {
+			log.Infof("\nDelete operation")
+			a.DeleteTelemetry(&jsPath)
+		}
+		return
+	}
+
+	var overrideValue config.Path
+	var overrideData config.YangOverride
+
+	if err := json.Unmarshal([]byte(*data), &overrideData); err != nil {
+		log.Fatalf("Can not unmarshal config data: %s error %s", *data, err)
+	}
+	overrideValue.Value.Value = overrideData.Override.Value.Value
+	//a.YangOverride[overrideKey] = &overrideData.Override.Value.Value
+	a.YangOverride[overrideKey] = &overrideValue
+	a.UpdateOverrideTelemetry(overrideKey)
+}
+
 // HandleRootConfigEvent handles configuration events for the root node
 func HandleRootConfigEvent(op protos.SdkMgrOperation, key *protos.ConfigKey, data *string, a *Agent) {
 	log.Infof("\n jspath %s keys %v", key.GetJsPath(), key.GetKeys())
@@ -264,7 +296,7 @@ func HandleConfigEvent(op protos.SdkMgrOperation, key *protos.ConfigKey, data *s
 
 	for _, item := range a.CfgTranxMap[".dssync.override"] {
 		log.Infof("%s: got new override", item)
-		// HandleKButlerConfigEvent(item.Op, item.Key, item.Data)
+		HandleOverrideConfigEvent(item.Op, item.Key, item.Data, a)
 	}
 
 	for _, item := range a.CfgTranxMap[a.YangRoot] {
