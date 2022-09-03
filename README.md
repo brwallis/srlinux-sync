@@ -50,25 +50,25 @@ system {
 # Building
 The NDK agent can be built from source using the provided `Makefile`. Options available are:
 
-* make help
+* `make help`
 Provides help around how to use the `Makefile`
 
-* make fmt
+* `make fmt`
 Runs `gofmt` on all Go source files
 
-* make lint
+* `make lint`
 Runs `golint` on all Go source files
 
-* make build
+* `make build`
 This builds the NDK agent using a local Go installation
 
-* make rpm
+* `make rpm`
 This builds the agent, then packages it and other required artifacts into an RPM using the `goreleaser/nfpm` container
 
-* make image
+* `make image`
 This uses a docker container to build the agent, and packages binaries and other artifacts inside the container with an entrypoint that copies these to the host
 
-* make clean
+* `make clean`
 This cleans the workspace, removing artifacts from previous builds
 
 # Installation
