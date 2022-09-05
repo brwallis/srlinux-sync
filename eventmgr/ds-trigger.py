@@ -72,7 +72,7 @@ def event_handler_main(in_json_str):
 
     response_actions = []
     for path in paths:
-        response_actions.append({'run-script' : {"cmdline": f"ip netns exec srbase-{network_instance} /opt/srlinux/dssync/bin/gnmic -a \"{target}\" -e json_ietf --skip-verify -u \"{login}\" -p \'{password}\' set --update-path \"/dssync/override[path={path.get('path')}]/value\" --update-value \"{path.get('value')}\""}})
+        response_actions.append({'run-script' : {"cmdline": f"sudo ip netns exec srbase-{network_instance} /opt/srlinux/dssync/bin/gnmic -a {target} -e json_ietf --skip-verify -u {login} -p {password} set --update-path /dssync/override[path={path.get('path')}]/value --update-value {path.get('value')}"}})
 
     response = {'actions':response_actions}
     return json.dumps(response)
